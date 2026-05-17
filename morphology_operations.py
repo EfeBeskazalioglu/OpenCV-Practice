@@ -2,29 +2,29 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-# --- Parametreler ---
+
 LOWER_GREEN = np.array([20, 50, 50])
 UPPER_GREEN = np.array([100, 255, 255])
 KERNEL_SIZE = 15
 
-# --- Görüntü Okuma ---
+
 img = cv2.imread('green_apple.jpg')
 if img is None:
     raise FileNotFoundError("green_apple.jpg bulunamadı!")
 
-# --- HSV ve Maske ---
+
 img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 mask = cv2.inRange(img_hsv, LOWER_GREEN, UPPER_GREEN)
 
-# --- Morfolojik Temizlik ---
+
 kernel = np.ones((KERNEL_SIZE, KERNEL_SIZE), np.uint8)
 clean_mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
 clean_mask = cv2.morphologyEx(clean_mask, cv2.MORPH_OPEN, kernel)
 
-# --- Sonuç Görüntüsü ---
+
 result = cv2.bitwise_and(img, img, mask=clean_mask)
 
-# --- Görselleştirme ---
+
 fig, axes = plt.subplots(1, 4, figsize=(20, 5))
 
 axes[0].imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
